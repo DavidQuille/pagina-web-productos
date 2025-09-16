@@ -6,14 +6,6 @@ import toast, { Toaster } from 'react-hot-toast'
 import { supabase } from '@/lib/supabase'
 import { Product } from '@/lib/supabase'
 
-// Función para determinar si un producto es nuevo (creado en las últimas 48 horas)
-function isProductNew(createdAt: string): boolean {
-  const productDate = new Date(createdAt);
-  const twoDaysAgo = new Date();
-  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-  return productDate >= twoDaysAgo;
-}
-
 export default function AdminPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
@@ -106,7 +98,8 @@ export default function AdminPage() {
           description: productData.description,
           category: productData.category,
           image_url,
-          is_new: productData.is_new
+          is_new: true, // Siempre establecemos is_new como true para nuevos productos
+          created_at: new Date().toISOString() // Asegurar que created_at se establezca explícitamente
         }
       ])
 
@@ -466,9 +459,9 @@ export default function AdminPage() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          {isProductNew(product.created_at) ? (
+                          {product.is_new ? (
                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                              Nuevo (48h)
+                              Nuevo
                             </span>
                           ) : (
                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
@@ -676,9 +669,22 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* La opción "Nuevo" ya no es necesaria porque se determina automáticamente por la fecha */}
-        <div className="text-xs text-gray-500 mt-2 italic">
-          Los productos aparecerán automáticamente como "Nuevos" durante las primeras 48 horas.
+        <div className="mt-4">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="is_new"
+              checked={productData.is_new}
+              onChange={(e) => setProductData({ ...productData, is_new: e.target.checked })}
+              className="h-4 w-4 text-[#a34e96] focus:ring-[#a34e96] border-gray-300 rounded"
+            />
+            <label htmlFor="is_new" className="ml-2 block text-sm text-gray-900">
+              Marcar como Nuevo
+            </label>
+          </div>
+          <p className="mt-1 text-xs text-gray-500">
+            Los productos marcados como "Nuevo" aparecerán destacados en la página principal.
+          </p>
         </div>
 
         <div className="flex justify-between mt-8">

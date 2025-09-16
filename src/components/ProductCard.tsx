@@ -6,14 +6,6 @@ interface ProductCardProps {
   product: Product
 }
 
-// Función para determinar si un producto es nuevo (creado en las últimas 48 horas)
-function isProductNew(createdAt: string): boolean {
-  const productDate = new Date(createdAt);
-  const twoDaysAgo = new Date();
-  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-  return productDate >= twoDaysAgo;
-}
-
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 relative">
@@ -31,7 +23,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <span className="text-gray-400">Sin imagen</span>
           </div>
         )}
-        {product.created_at && isProductNew(product.created_at) && (
+        {product.is_new === true && (
           <div className="absolute top-2 right-2 bg-[#3e5497] text-white px-3 py-1 rounded-full text-sm font-bold z-10">
             Nuevo
           </div>

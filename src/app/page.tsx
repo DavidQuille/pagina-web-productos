@@ -2,23 +2,20 @@ import { supabase } from '@/lib/supabase'
 import ProductCard from '@/components/ProductCard'
 
 async function getProducts() {
-  // Obtener productos creados en los últimos 2 días (48 horas)
-  const twoDaysAgo = new Date();
-  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-  
-  const { data: products, error } = await supabase
+  // Solo obtener productos marcados explícitamente como is_new=true
+  const { data: newProducts, error } = await supabase
     .from('products')
     .select('*')
-    .gte('created_at', twoDaysAgo.toISOString())
+    .eq('is_new', true)
     .order('created_at', { ascending: false })
-    .limit(6)
+    .limit(6);
 
   if (error) {
-    console.error('Error al obtener productos:', error)
-    return []
+    console.error('Error al obtener productos nuevos:', error);
+    return [];
   }
 
-  return products || []
+  return newProducts || [];
 }
 
 export default async function Home() {
@@ -100,7 +97,7 @@ export default async function Home() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
             {products && products.length > 0 ? (
-              products.map((product) => (
+              products.map((product: any) => (
                 <ProductCard key={product.id} product={product} />
               ))
             ) : (
