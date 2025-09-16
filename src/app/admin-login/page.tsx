@@ -11,14 +11,13 @@ export default function AdminLogin() {
   const router = useRouter()
 
   // Esta es una autenticación simple. En una aplicación real, 
-  // deberías usar un sistema de autenticación más seguro.
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
     
-    // Contraseña predeterminada - cambia esto por una contraseña segura
-    const ADMIN_PASSWORD = 'admin123'
+    // Contraseña
+    const ADMIN_PASSWORD = 'mula789'
     
     setTimeout(() => {
       if (password === ADMIN_PASSWORD) {
@@ -29,7 +28,7 @@ export default function AdminLogin() {
         setError('Contraseña incorrecta')
         setLoading(false)
       }
-    }, 500) // Simulamos un pequeño retraso
+    }, 500) 
   }
 
   return (

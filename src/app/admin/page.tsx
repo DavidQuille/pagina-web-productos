@@ -19,11 +19,11 @@ export default function AdminPage() {
   
   // Verificar autenticación
   useEffect(() => {
-    // Verificamos si existe el token en sessionStorage
+  
     const adminAuth = sessionStorage.getItem('adminAuth')
     
     if (adminAuth !== 'true') {
-      // Si no está autenticado, redirigir al login
+     
       router.push('/admin-login')
     } else {
       setIsAuthenticated(true)
@@ -197,7 +197,8 @@ export default function AdminPage() {
     <div className="min-h-screen bg-gray-50 pt-16 pb-12">
       <Toaster position="top-right" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+        <div className="pt-8"></div>
+        <div className="text-center mb-12 mt-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Panel de Administración</h1>
           <p className="text-gray-600">Gestiona tus productos fácilmente.</p>
         </div>
