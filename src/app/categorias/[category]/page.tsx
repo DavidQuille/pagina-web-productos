@@ -31,9 +31,8 @@ const getCategoryDescription = (category: string) => {
   }
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ category: string }> | { category: string } }) {
-  const resolvedParams = await Promise.resolve(params)
-  const category = resolvedParams.category
+export default async function CategoryPage({ params }: Props) {
+  const category = params.category
   const products = await getProductsByCategory(category)
   const description = getCategoryDescription(category)
   
