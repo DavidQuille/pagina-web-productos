@@ -2,13 +2,13 @@ import { supabase } from '@/lib/supabase'
 import ProductCard from '@/components/ProductCard'
 import type { Product } from '@/lib/supabase'
 
-// Definiendo las props según el tipo esperado por Next.js para Pages
 type CategoryParams = {
   category: string;
 }
 
+// Buena práctica: Actualiza el tipo para reflejar que params es una Promesa
 interface Props {
-  params: CategoryParams;
+  params: Promise<CategoryParams>;
 }
 
 async function getProductsByCategory(category: string) {
@@ -34,19 +34,24 @@ const getCategoryDescription = (category: string) => {
   }
 }
 
-// Definición de la página usando notación explícita para NextJS
-export default async function CategoryPage({ params }: { params: CategoryParams }) {
-  const category = params.category
+// ==================================================================
+//                              CAMBIOS AQUÍ
+// 1. La función ahora recibe "props" en lugar de "{ params }"
+// 2. Usamos "await" para obtener el valor de los params
+// ==================================================================
+export default async function CategoryPage(props: Props) {
+  const params = await props.params; // <--- CAMBIO #1: Resolver la promesa
+  const category = params.category;  // <--- CAMBIO #2: Ahora se puede acceder
+
   const products = await getProductsByCategory(category)
   const description = getCategoryDescription(category)
   
-  // Color de fondo según categoría
   const getBgColor = () => {
     switch(category) {
-      case 'ropa': return 'from-[#f5c3cf] to-[#a34e96]'; // Rosa a púrpura
-      case 'juguetes': return 'from-[#a34e96] to-[#3e5497]'; // Púrpura a azul
-      case 'basicos': return 'from-[#3e5497] to-[#a34e96]'; // Azul a púrpura
-      default: return 'from-[#a34e96] to-[#3e5497]'; // Color por defecto
+      case 'ropa': return 'from-[#f5c3cf] to-[#a34e96]';
+      case 'juguetes': return 'from-[#a34e96] to-[#3e5497]';
+      case 'basicos': return 'from-[#3e5497] to-[#a34e96]';
+      default: return 'from-[#a34e96] to-[#3e5497]';
     }
   }
 
