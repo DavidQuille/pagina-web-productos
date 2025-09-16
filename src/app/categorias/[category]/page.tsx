@@ -2,10 +2,13 @@ import { supabase } from '@/lib/supabase'
 import ProductCard from '@/components/ProductCard'
 import type { Product } from '@/lib/supabase'
 
+// Definiendo las props según el tipo esperado por Next.js para Pages
+type CategoryParams = {
+  category: string;
+}
+
 interface Props {
-  params: {
-    category: string
-  }
+  params: CategoryParams;
 }
 
 async function getProductsByCategory(category: string) {
@@ -31,7 +34,8 @@ const getCategoryDescription = (category: string) => {
   }
 }
 
-export default async function CategoryPage({ params }: Props) {
+// Definición de la página usando notación explícita para NextJS
+export default async function CategoryPage({ params }: { params: CategoryParams }) {
   const category = params.category
   const products = await getProductsByCategory(category)
   const description = getCategoryDescription(category)
