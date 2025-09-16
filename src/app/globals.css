@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Clases para la animación de scroll */
+.fade-in-section {
+    opacity: 1; /* Visible por defecto */
+    transform: translateY(0);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Más rápido: 0.3s en lugar de 0.6s */
+}
+
+/* Añadimos una clase para la animación específica */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(15px); /* Distancia más corta: 15px en lugar de 20px */
+}
+
+.animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+        
+/* Estilo para el subrayado animado de los enlaces de navegación */
+.nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #4f46e5; /* Indigo */
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+}
+
+.nav-link:hover {
+     color: #3730a3; /* Indigo más oscuro */
+}
+
+.nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
