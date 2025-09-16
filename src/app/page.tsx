@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import ProductCard from '@/components/ProductCard'
+export const dynamic = 'force-dynamic';
 
 async function getProducts() {
   // Solo obtener productos marcados explícitamente como is_new=true
