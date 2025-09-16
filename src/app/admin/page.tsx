@@ -24,6 +24,7 @@ export default function AdminPage() {
   const [isLoadingProducts, setIsLoadingProducts] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [selectedFileName, setSelectedFileName] = useState('')
   
   // Verificar autenticación
   useEffect(() => {
@@ -125,6 +126,7 @@ export default function AdminPage() {
         image_url: '',
         is_new: false
       })
+      setSelectedFileName('')
     } catch (error) {
       toast.error('Error al agregar el producto')
       console.error(error)
@@ -171,6 +173,16 @@ export default function AdminPage() {
       image_url: product.image_url || '',
       is_new: product.is_new || false
     });
+    
+    // Extraer el nombre del archivo de la URL de la imagen si existe
+    if (product.image_url) {
+      const urlParts = product.image_url.split('/');
+      const fileName = urlParts[urlParts.length - 1];
+      setSelectedFileName(fileName ? `Imagen actual: ${fileName}` : 'Imagen actual');
+    } else {
+      setSelectedFileName('');
+    }
+    
     setEditingProduct(product);
     setActiveTab('add');
   };
@@ -289,6 +301,7 @@ export default function AdminPage() {
         is_new: false
       });
       
+      setSelectedFileName('');
       setEditingProduct(null);
       setActiveTab('list');
     } catch (error) {
@@ -344,6 +357,7 @@ export default function AdminPage() {
             onClick={() => {
               setActiveTab('add');
               setEditingProduct(null);
+              setSelectedFileName('');
               setProductData({
                 id: null,
                 name: '',
@@ -601,24 +615,62 @@ export default function AdminPage() {
             Imagen
           </label>
           <div className="mt-1 flex items-center">
-            <div className="w-full flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+            <div className={`w-full flex justify-center px-6 pt-5 pb-6 border-2 ${selectedFileName ? 'border-[#a34e96]' : 'border-gray-300'} ${selectedFileName ? 'bg-purple-50' : ''} border-dashed rounded-md transition-colors`}>
               <div className="space-y-1 text-center">
-                <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <div className="flex text-sm text-gray-600">
-                  <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
-                    <span>Sube una imagen</span>
+                {selectedFileName ? (
+                  <>
+                    <div className="mx-auto h-12 w-12 text-[#a34e96] flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-sm font-medium text-[#a34e96] break-all">
+                      {selectedFileName}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <p className="text-sm text-gray-600">
+                      No hay imagen seleccionada
+                    </p>
+                  </>
+                )}
+                <div className="flex justify-center text-sm text-gray-600 mt-2">
+                  <label className="relative cursor-pointer bg-white rounded-md font-medium text-[#a34e96] hover:text-[#8a4280] focus-within:outline-none px-3 py-1.5 border border-[#a34e96] hover:bg-purple-50 transition-colors">
+                    <span>{selectedFileName ? 'Cambiar imagen' : 'Seleccionar imagen'}</span>
                     <input 
                       type="file"
                       accept="image/*"
-                      onChange={(e) => setProductData({ ...productData, image: e.target.files?.[0] || null })}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setProductData({ ...productData, image: file });
+                          setSelectedFileName(file.name);
+                        } else {
+                          setProductData({ ...productData, image: null });
+                          setSelectedFileName('');
+                        }
+                      }}
                       className="sr-only"
                     />
                   </label>
-                  <p className="pl-1">o arrastra y suelta</p>
                 </div>
-                <p className="text-xs text-gray-500">PNG, JPG, GIF hasta 5MB</p>
+                <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF hasta 5MB</p>
+                {selectedFileName && (
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setProductData({ ...productData, image: null });
+                      setSelectedFileName('');
+                    }}
+                    className="mt-2 text-xs text-red-600 hover:text-red-800"
+                  >
+                    Eliminar imagen
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -635,6 +687,7 @@ export default function AdminPage() {
               type="button"
               onClick={() => {
                 setEditingProduct(null);
+                setSelectedFileName('');
                 setActiveTab('list');
               }}
               className="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
