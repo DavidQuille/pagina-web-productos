@@ -4,7 +4,9 @@ const nextConfig = {
     domains: ['yeexjjmfszxicdpbvhry.supabase.co'],
   },
   experimental: {
-    serverActions: true,
+    serverActions: {
+      allowedOrigins: ['localhost:3000', 'pagina-web-productos.vercel.app']
+    }
   }
 }
 
