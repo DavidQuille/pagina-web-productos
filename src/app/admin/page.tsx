@@ -510,73 +510,118 @@ export default function AdminPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-lg shadow-sm p-6"
           >
-            <h2 className="text-xl font-semibold mb-6">{editingProduct ? 'Editar Producto' : 'Agregar Producto'}</h2>
+            <div className="bg-gradient-to-r from-[#a34e96] to-[#3e5497] p-4 rounded-t-lg">
+              <h2 className="text-xl font-semibold text-white">{editingProduct ? 'Editar Producto' : 'Agregar Nuevo Producto'}</h2>
+            </div>
             
-            <form onSubmit={editingProduct ? handleUpdate : handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Nombre del Producto
-          </label>
-          <input
-            type="text"
-            required
-            value={productData.name}
-            onChange={(e) => setProductData({ ...productData, name: e.target.value })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
+            <form onSubmit={editingProduct ? handleUpdate : handleSubmit} className="space-y-6 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nombre del Producto
+            </label>
+            <input
+              type="text"
+              required
+              placeholder="Ej: Mameluco para bebé"
+              value={productData.name}
+              onChange={(e) => setProductData({ ...productData, name: e.target.value })}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#a34e96] focus:ring-[#a34e96] transition-colors"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Precio
+            </label>
+            <div className="relative rounded-md shadow-sm">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span className="text-gray-500 sm:text-sm">$</span>
+              </div>
+              <input
+                type="number"
+                step="0.01"
+                required
+                placeholder="0.00"
+                value={productData.price}
+                onChange={(e) => setProductData({ ...productData, price: e.target.value })}
+                className="block w-full pl-7 pr-12 rounded-md border-gray-300 focus:border-[#a34e96] focus:ring-[#a34e96] transition-colors"
+              />
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <span className="text-gray-500 sm:text-sm">USD</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Precio
-          </label>
-          <input
-            type="number"
-            required
-            value={productData.price}
-            onChange={(e) => setProductData({ ...productData, price: e.target.value })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Descripción
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Descripción del Producto
           </label>
           <textarea
             required
+            placeholder="Describe el producto con detalles como material, tamaño, uso recomendado, etc."
             value={productData.description}
             onChange={(e) => setProductData({ ...productData, description: e.target.value })}
-            rows={3}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            rows={4}
+            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#a34e96] focus:ring-[#a34e96] transition-colors"
           />
+          <p className="mt-1 text-xs text-gray-500">
+            Una buena descripción ayuda a los clientes a entender mejor el producto
+          </p>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Categoría
           </label>
-          <select
-            value={productData.category}
-            onChange={(e) => setProductData({ ...productData, category: e.target.value })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          >
-            <option value="ropa">Ropa</option>
-            <option value="hogar">Hogar</option>
-            <option value="aseo">Aseo</option>
-          </select>
+          <div className="mt-1 relative">
+            <select
+              value={productData.category}
+              onChange={(e) => setProductData({ ...productData, category: e.target.value })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 appearance-none pl-3 pr-10 py-2"
+            >
+              <option value="ropa">Ropa</option>
+              <option value="juguetes">Juguetes</option>
+              <option value="basicos">Básicos</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </div>
+          </div>
+          <p className="mt-1 text-xs text-gray-500">
+            Selecciona una de las categorías establecidas de tu tienda
+          </p>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Imagen
           </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setProductData({ ...productData, image: e.target.files?.[0] || null })}
-            className="mt-1 block w-full"
-          />
+          <div className="mt-1 flex items-center">
+            <div className="w-full flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+              <div className="space-y-1 text-center">
+                <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <div className="flex text-sm text-gray-600">
+                  <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                    <span>Sube una imagen</span>
+                    <input 
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setProductData({ ...productData, image: e.target.files?.[0] || null })}
+                      className="sr-only"
+                    />
+                  </label>
+                  <p className="pl-1">o arrastra y suelta</p>
+                </div>
+                <p className="text-xs text-gray-500">PNG, JPG, GIF hasta 5MB</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* La opción "Nuevo" ya no es necesaria porque se determina automáticamente por la fecha */}
@@ -600,11 +645,24 @@ export default function AdminPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`${editingProduct ? 'ml-auto' : 'w-full'} flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300`}
+            className={`${editingProduct ? 'ml-auto' : 'w-full'} flex justify-center py-3 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-[#a34e96] to-[#3e5497] hover:from-[#8e4483] hover:to-[#344680] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#a34e96] disabled:opacity-70`}
           >
-            {isLoading 
-              ? (editingProduct ? 'Actualizando...' : 'Agregando...') 
-              : (editingProduct ? 'Actualizar Producto' : 'Agregar Producto')}
+            {isLoading ? (
+              <span className="flex items-center">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {editingProduct ? 'Actualizando...' : 'Agregando...'}
+              </span>
+            ) : (
+              <span className="flex items-center">
+                {editingProduct ? 'Actualizar Producto' : 'Agregar Producto'}
+                <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </span>
+            )}
           </button>
         </div>
       </form>
