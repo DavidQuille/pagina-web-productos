@@ -28,8 +28,9 @@ export default function CartSidebar() {
     let yPosition = 45
     
     // Encabezados
-    doc.setFontSize(10)
-    doc.setFont(undefined, 'bold')
+  doc.setFontSize(10)
+  // Use a named font instead of undefined to satisfy TypeScript types (default jsPDF font)
+  doc.setFont('helvetica', 'bold')
     doc.text('Producto', 20, yPosition)
     doc.text('Cant.', 120, yPosition)
     doc.text('Precio Unit.', 140, yPosition)
@@ -40,7 +41,7 @@ export default function CartSidebar() {
     yPosition += 10
     
     // Productos
-    doc.setFont(undefined, 'normal')
+  doc.setFont('helvetica', 'normal')
     cart.forEach((item) => {
       // Verificar si necesitamos una nueva página
       if (yPosition > 270) {
@@ -73,15 +74,15 @@ export default function CartSidebar() {
     yPosition += 10
     
     // Total
-    doc.setFont(undefined, 'bold')
+  doc.setFont('helvetica', 'bold')
     doc.setFontSize(14)
     doc.text('TOTAL:', 140, yPosition)
     doc.text(`$${getTotalPrice().toFixed(2)}`, 170, yPosition)
     
     // Pie de página
     yPosition += 20
-    doc.setFontSize(8)
-    doc.setFont(undefined, 'normal')
+  doc.setFontSize(8)
+  doc.setFont('helvetica', 'normal')
     doc.text('Gracias por su preferencia', 20, yPosition)
     doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, yPosition + 5)
     
