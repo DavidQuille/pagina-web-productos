@@ -146,7 +146,7 @@ export default function AdminPage() {
       
       if (error) throw error;
       
-      // Actualizar la lista de productos
+      // Actualizar la lista de productos 2
       setProducts(products.filter(product => product.id !== id));
       toast.success('Producto eliminado correctamente');
       setDeleteConfirmId(null);
@@ -234,12 +234,13 @@ export default function AdminPage() {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold">Productos</h2>
-              <div className="relative">
+                <div className="relative">
                 <input
                   type="text"
                   placeholder="Buscar productos..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  onFocus={(e) => e.currentTarget.select()}
                   className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
                 />
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -368,7 +369,7 @@ export default function AdminPage() {
               <h2 className="text-xl font-semibold text-white">Agregar Nuevo Producto</h2>
             </div>
             
-            <form onSubmit={handleSubmit} className="space-y-6 p-4">
+            <form onSubmit={handleSubmit} className="space-y-6 p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -380,7 +381,8 @@ export default function AdminPage() {
                     placeholder="Ej: Mameluco para bebé"
                     value={productData.name}
                     onChange={(e) => setProductData({ ...productData, name: e.target.value })}
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#a34e96] focus:ring-[#a34e96] transition-colors"
+                    onFocus={(e) => e.currentTarget.select()}
+                    className="block w-full px-3 py-2 rounded-md border border-gray-300 shadow-sm focus:border-[#a34e96] focus:ring-[#a34e96] transition-colors"
                   />
                 </div>
 
@@ -394,12 +396,13 @@ export default function AdminPage() {
                     </div>
                     <input
                       type="number"
-                      step="0.01"
-                      required
-                      placeholder="0.00"
-                      value={productData.price}
-                      onChange={(e) => setProductData({ ...productData, price: e.target.value })}
-                      className="block w-full pl-7 rounded-md border-gray-300 shadow-sm focus:border-[#a34e96] focus:ring-[#a34e96] transition-colors"
+                        step="0.01"
+                        required
+                        placeholder="0.00"
+                        value={productData.price}
+                        onChange={(e) => setProductData({ ...productData, price: e.target.value })}
+                        onFocus={(e) => e.currentTarget.select()}
+                        className="block w-full pl-7 pr-3 py-2 rounded-md border border-gray-300 shadow-sm focus:border-[#a34e96] focus:ring-[#a34e96] transition-colors"
                     />
                   </div>
                 </div>
@@ -415,7 +418,8 @@ export default function AdminPage() {
                   value={productData.description}
                   onChange={(e) => setProductData({ ...productData, description: e.target.value })}
                   rows={4}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#a34e96] focus:ring-[#a34e96] transition-colors"
+                  onFocus={(e) => e.currentTarget.select()}
+                  className="block w-full px-3 py-2 rounded-md border border-gray-300 shadow-sm focus:border-[#a34e96] focus:ring-[#a34e96] transition-colors"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Una buena descripción ayuda a los clientes a entender mejor el producto
@@ -435,6 +439,7 @@ export default function AdminPage() {
                     <option value="ropa">Ropa</option>
                     <option value="juguetes">Juguetes</option>
                     <option value="basicos">Básicos</option>
+                    <option value="accesorios">Accesorios</option>
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

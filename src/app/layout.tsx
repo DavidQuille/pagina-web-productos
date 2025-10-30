@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
+import CartSidebar from '@/components/CartSidebar'
+import { CartProvider } from '@/context/CartContext'
 import './globals.css'
 import Script from 'next/script'
 
@@ -20,18 +22,29 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
-      <body className="text-gray-800 font-['Inter',sans-serif] bg-[#f8f9fa]">
-        <Navbar />
-        {/* No añadimos espacio base aquí, cada página lo controla */}
-        {children}
-        <footer id="contacto" className="bg-gradient-to-r from-[#a34e96] to-[#3e5497] text-white py-8">
-          <div className="container mx-auto px-6 text-center">
-            <p>&copy; 2025 Para tu bebé. Todos los derechos reservados.</p>
-            <div className="mt-3 text-xs text-gray-200">
-              <a href="/admin-login" className="hover:text-white transition-colors">Admin</a>
+      <body className="text-gray-800 font-['Inter',sans-serif] bg-[#f8f9fa] min-h-screen flex flex-col">
+        <CartProvider>
+          <Navbar />
+          <CartSidebar />
+          {/* Contenedor principal que ocupa el espacio restante para empujar el footer abajo */}
+          <main className="flex-1">
+            {children}
+          </main>
+
+          <footer id="contacto" className="bg-gradient-to-r from-[#a34e96] to-[#3e5497] text-white py-4">
+            <div className="container mx-auto px-6 text-center">
+              <p className="text-sm">&copy; 2025 Para tu bebé. Todos los derechos reservados.</p>
+              <div className="mt-2">
+                <a href="/contacto" className="text-white hover:text-[#f5c3cf] transition-colors duration-300 font-medium">
+                  Contacto
+                </a>
+              </div>
+              <div className="mt-2 text-xs text-gray-200">
+
+              </div>
             </div>
-          </div>
-        </footer>
+          </footer>
+        </CartProvider>
           <Script id="intersection-observer" strategy="afterInteractive">
           {`
             // Lógica para Animaciones al hacer Scroll

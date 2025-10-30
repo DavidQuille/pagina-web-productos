@@ -1,22 +1,31 @@
 import { supabase } from '@/lib/supabase'
-import ProductCard from '@/components/ProductCard'
+import ProductCarousel from '@/components/ProductCarousel'
 export const dynamic = 'force-dynamic';
 
 async function getProducts() {
-  // Solo obtener productos marcados explícitamente como is_new=true
-  const { data: newProducts, error } = await supabase
+  // Obtener hasta 100 productos y seleccionar aleatoriamente hasta 10
+  const { data: allProducts, error } = await supabase
     .from('products')
     .select('*')
-    .eq('is_new', true)
     .order('created_at', { ascending: false })
-    .limit(6);
+    .limit(100);
 
   if (error) {
-    console.error('Error al obtener productos nuevos:', error);
+    console.error('Error al obtener productos:', error);
     return [];
   }
 
-  return newProducts || [];
+  const productsArray = allProducts || [];
+
+  // Mezclar array (Fisher-Yates) y tomar hasta 10
+  for (let i = productsArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = productsArray[i];
+    productsArray[i] = productsArray[j];
+    productsArray[j] = tmp;
+  }
+
+  return productsArray.slice(0, 10);
 }
 
 export default async function Home() {
@@ -27,9 +36,9 @@ export default async function Home() {
       {/* Espacio para la navbar fija */}
       <div className="pt-16"></div>
       {/* HERO SECTION */}
-      <section className="relative h-[60vh] flex items-center justify-center text-white text-center bg-gray-900">
-        {/* Fondo de color sólido */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#f5c3cf] to-[#a34e96] z-0">
+      <section className="relative h-[60vh] flex items-center justify-center text-white text-center">
+        {/* Fondo: usar mismo gradiente que el footer */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#a34e96] to-[#3e5497] z-0">
           <div className="absolute inset-0 bg-black opacity-15"></div>
         </div>
         
@@ -55,7 +64,7 @@ export default async function Home() {
               Encuentra todo lo que buscas en nuestras colecciones seleccionadas.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Categoría 1 */}
             <div className="relative rounded-xl overflow-hidden group h-56">
               <div className="bg-[#f5c3cf] w-full h-full absolute"></div>
@@ -83,6 +92,15 @@ export default async function Home() {
                 </a>
               </div>
             </div>
+            {/* Categoría 4 */}
+            <div className="relative rounded-xl overflow-hidden group h-56">
+              <div className="bg-[#e91e63] w-full h-full absolute"></div>
+              <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
+                <a href="/categorias/accesorios" className="block w-full h-full flex items-center justify-center">
+                  <h3 className="text-white text-2xl font-bold">Accesorios</h3>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -91,22 +109,12 @@ export default async function Home() {
       <section id="catalogo" className="py-16 bg-white fade-in-section animate-on-scroll">
         <div className="container mx-auto px-6">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-2 text-gray-800">Productos Nuevos</h2>
+            <h2 className="text-3xl font-bold mb-2 text-gray-800">Nuestros Productos</h2>
             <p className="text-base text-gray-600 max-w-2xl mx-auto">
-              Descubre las últimas tendencias y novedades en nuestra tienda.
+              Descubre una selección de productos disponibles en nuestra tienda.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {products && products.length > 0 ? (
-              products.map((product: any) => (
-                <ProductCard key={product.id} product={product} />
-              ))
-            ) : (
-              <p className="text-gray-500 col-span-3 text-center py-8">
-                No hay productos nuevos disponibles
-              </p>
-            )}
-          </div>
+          <ProductCarousel products={products} />
         </div>
       </section>
       

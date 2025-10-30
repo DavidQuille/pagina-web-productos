@@ -11,25 +11,38 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false)
   const router = useRouter()
 
-  // Esta es una autenticación simple. En una aplicación real, 
-  const handleLogin = (e: React.FormEvent) => {
+  // Esta es una autenticación simple (cliente). Para no dejar la
+  // contraseña en texto plano en el código, comparamos el hash SHA-256
+  // de la contraseña ingresada con un hash almacenado aquí.
+  // Nota: para seguridad real, la verificación debe realizarse en el servidor.
+  const ADMIN_PASSWORD_HASH = 'bd81dbe37ffea7d896a66ef96e86a2c234dc89ba5f59991c7c4157a864d81ead'
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
-    
-    // Contraseña
-    const ADMIN_PASSWORD = 'mula789'
-    
-    setTimeout(() => {
-      if (password === ADMIN_PASSWORD) {
-        // Guardar un token en sessionStorage
+
+    try {
+      // Calcular SHA-256 de la contraseña ingresada usando Web Crypto
+      const enc = new TextEncoder()
+      const data = enc.encode(password)
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+      const hashArray = Array.from(new Uint8Array(hashBuffer))
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+
+      // Comparar hashes
+      if (hashHex === ADMIN_PASSWORD_HASH) {
         sessionStorage.setItem('adminAuth', 'true')
         router.push('/admin')
       } else {
         setError('Contraseña incorrecta')
         setLoading(false)
       }
-    }, 500) 
+    } catch (err) {
+      console.error('Error verificando contraseña:', err)
+      setError('Error al verificar la contraseña')
+      setLoading(false)
+    }
   }
 
   return (

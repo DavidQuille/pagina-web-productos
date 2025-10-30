@@ -21,6 +21,21 @@ async function getProductsByCategory(category: string) {
   return data as Product[]
 }
 
+const getCategoryTitle = (category: string) => {
+  switch (category) {
+    case 'ropa':
+      return 'Ropa'
+    case 'juguetes':
+      return 'Juguetes'
+    case 'basicos':
+      return 'Básicos'
+    case 'accesorios':
+      return 'Accesorios'
+    default:
+      return category
+  }
+}
+
 const getCategoryDescription = (category: string) => {
   switch (category) {
     case 'ropa':
@@ -29,6 +44,8 @@ const getCategoryDescription = (category: string) => {
       return 'Diviértete con nuestra selección de juguetes'
     case 'basicos':
       return 'Artículos esenciales para el hogar y cuidado diario'
+    case 'accesorios':
+      return 'Complementos perfectos para tu bebé'
     default:
       return ''
   }
@@ -46,12 +63,22 @@ export default async function CategoryPage(props: Props) {
   const products = await getProductsByCategory(category)
   const description = getCategoryDescription(category)
   
-  const getBgColor = () => {
-    switch(category) {
-      case 'ropa': return 'from-[#f5c3cf] to-[#a34e96]';
-      case 'juguetes': return 'from-[#a34e96] to-[#3e5497]';
-      case 'basicos': return 'from-[#3e5497] to-[#a34e96]';
-      default: return 'from-[#a34e96] to-[#3e5497]';
+  // Devuelve un color sólido para el fondo del hero de la categoría.
+  // Se usan colores sólidos (sin degradado) según lo solicitado.
+  const getBgColor = (cat?: string) => {
+    const key = cat || category
+    switch (key) {
+      // Usamos el mismo color que tenía "Juguetes" para "Ropa" tal como pediste
+      case 'ropa':
+        return '#a34e96'
+      case 'juguetes':
+        return '#3e5497'
+      case 'basicos':
+        return '#3e5497'
+      case 'accesorios':
+        return '#8e4483'
+      default:
+        return '#a34e96'
     }
   }
 
@@ -60,12 +87,12 @@ export default async function CategoryPage(props: Props) {
       {/* Espacio para la navbar fija */}
       <div className="pt-16"></div>
       
-      {/* Hero de categoría */}
-      <section className={`bg-gradient-to-r ${getBgColor()} text-white py-14`}>
+      {/* Hero de categoría (fondo sólido por categoría) */}
+      <section style={{ backgroundColor: getBgColor(category) }} className={`text-white py-14`}>
         <div className="container mx-auto px-6">
           <div className="max-w-3xl">
             <h1 className="text-3xl md:text-4xl font-bold capitalize mb-3">
-              {category}
+              {getCategoryTitle(category)}
             </h1>
             <p className="text-base text-white/90 md:text-lg">
               {description}
