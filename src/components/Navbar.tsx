@@ -11,13 +11,20 @@ export default function Navbar() {
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <div className="flex items-center">
           <a href="/" className="flex items-center">
-            <img 
-              src="/Logo1.png" 
-              alt="Logo Para tu bebé" 
-              className="h-10 mr-3" 
+            <img
+              src="/Logo1.png"
+              alt="Logo Para tu bebé"
+              className="h-10 w-auto mr-3 block"
+              width={40}
+              height={40}
+              loading="eager"
+              fetchPriority="high"
+              decoding="sync"
+              style={{ imageRendering: 'auto' }}
               onError={(e) => {
                 console.error('Error cargando logo:', e);
-                e.currentTarget.style.display = 'none';
+                // avoid removing the element to prevent layout jumps; hide visibility instead
+                e.currentTarget.style.visibility = 'hidden';
               }}
             />
             <span className="text-xl font-bold tracking-wider">Para tu bebé</span>
